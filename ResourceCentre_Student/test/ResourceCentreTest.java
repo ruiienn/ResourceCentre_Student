@@ -1,345 +1,251 @@
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
-public class ResourceCentre {
-
-    public static void main(String[] args) {
-
-        ArrayList<Camcorder> camcorderList = new ArrayList<Camcorder>();
-        ArrayList<Chromebook> chromebookList = new ArrayList<Chromebook>();
-
-        camcorderList.add(new Camcorder("CC001", "Sony HDR-CX405", 35));
-        camcorderList.add(new Camcorder("CC002", "Panasonic HC-MDH2", 10));
-        chromebookList.add(new Chromebook("CB001", "ASUS Chromebook ", "Win 10"));
-        chromebookList.add(new Chromebook("CB002", "HP Chromebook", "Win 10"));
-
-        int option = 0;
-
-        while (option != 5) {
-
-            ResourceCentre.menu();
-            option = Helper.readInt("Enter an option > ");
-
-            if (option == 1) {
-                // View all items
-                ResourceCentre.viewAllCamcorder(camcorderList);
-                ResourceCentre.viewAllChromebook(chromebookList);
-
-            } else if (option == 2) {
-                // Add a new item
-                ResourceCentre.setHeader("ADD");
-                ResourceCentre.setHeader("ITEM TYPES");
-                System.out.println("1. Camcorder");
-                System.out.println("2. Chromebook");
-
-                int itemType = Helper.readInt("Enter option to select item type > ");
-
-                if (itemType == 1) {
-                    // Add a camcorder
-                    Camcorder cc = inputCamcorder();
-                    ResourceCentre.addCamcorder(camcorderList, cc);
-                    System.out.println("Camcorder added");
-
-                } else if (itemType == 2) {
-                    // Add a Chromebook
-                    Chromebook cb = inputChromebook();
-                    ResourceCentre.addChromebook(chromebookList, cb);
-                    System.out.println("Chromebook added");
-
-                } else {
-                    System.out.println("Invalid type");
-                }
-
-            } else if (option == 3) {
-                // Loan item
-                ResourceCentre.setHeader("LOAN");
-                ResourceCentre.setHeader("ITEM TYPES");
-                System.out.println("1. Camcorder");
-                System.out.println("2. Chromebook");
-
-                int itemType = Helper.readInt("Enter option to select item type > ");
-
-                if (itemType == 1) {
-                    // Loan camcorder
-                    ResourceCentre.loanCamcorder(camcorderList);
-                } else if (itemType == 2) {
-                    // Loan Chromebook
-                    ResourceCentre.loanChromebook(chromebookList);
-                } else {
-                    System.out.println("Invalid type");
-                }
-
-            } else if (option == 4) {
-                // Return item
-                ResourceCentre.setHeader("RETURN");
-                ResourceCentre.setHeader("ITEM TYPES");
-                System.out.println("1. Camcorder");
-                System.out.println("2. Chromebook");
-
-                int itemType = Helper.readInt("Enter option to select item type > ");
-                if (itemType == 1) {
-                    // Return camcorder
-                    ResourceCentre.returnCamcorder(camcorderList);
-                } else if (itemType == 2) {
-                    // Return Chromebook
-                    ResourceCentre.returnChromebook(chromebookList);
-                } else {
-                    System.out.println("Invalid type");
-                }
-
-            } else if (option == 5) {
-                System.out.println("Bye!");
-            } else {
-                System.out.println("Invalid option");
-            }
-
-        }
-
-    }
-
-    public static void menu() {
-        ResourceCentre.setHeader("RESOURCE CENTRE APP");
-        System.out.println("1. Display Inventory");
-        System.out.println("2. Add item");
-        System.out.println("3. Loan item");
-        System.out.println("4. Return item");
-        System.out.println("5. Quit");
-        Helper.line(80, "-");
-
-    }
-
-    public static void setHeader(String header) {
-        Helper.line(80, "-");
-        System.out.println(header);
-        Helper.line(80, "-");
-    }
-
-    public static String showAvailability(boolean isAvailable) {
-        String avail;
-
-        if (isAvailable == true) {
-            avail = "Yes";
-        } else {
-            avail = "No";
-        }
-        return avail;
-    }
-
-    //================================= Option 1 View items (CRUD- Read) =================================
-    public static String retrieveAllCamcorder(ArrayList<Camcorder> camcorderList) {
-        String output = "";
-
-        for (int i = 0; i < camcorderList.size(); i++) {
-            if (camcorderList.get(i).getIsAvailable()) {
-                output += String.format("%-10s %-30s %-10s %-10s %-20d\n", camcorderList.get(i).getAssetTag(),
-                        camcorderList.get(i).getDescription(),
-                        ResourceCentre.showAvailability(camcorderList.get(i).getIsAvailable()),
-                        camcorderList.get(i).getDueDate(), camcorderList.get(i).getOpticalZoom());
-            }
-        }
-        return output;
-    }
-
-    public static void viewAllCamcorder(ArrayList<Camcorder> camcorderList) {
-        ResourceCentre.setHeader("CAMCORDER LIST");
-        String output = String.format("%-10s %-30s %-10s %-10s %-20s\n", "ASSET TAG", "DESCRIPTION",
-                "AVAILABLE", "DUE DATE", "OPTICAL ZOOM");
-        output += retrieveAllCamcorder(camcorderList);
-        System.out.println(output);
-    }
-
-    public static String retrieveAllChromebook(ArrayList<Chromebook> chromebookList) {
-        String output = "";
-
-        for (int i = 0; i < chromebookList.size(); i++) {
-            if (chromebookList.get(i).getIsAvailable()) {
-                output += String.format("%-10s %-30s %-10s %-10s %-20s\n", chromebookList.get(i).getAssetTag(),
-                        chromebookList.get(i).getDescription(),
-                        ResourceCentre.showAvailability(chromebookList.get(i).getIsAvailable()),
-                        chromebookList.get(i).getDueDate(), chromebookList.get(i).getOs());
-            }
-        }
-        return output;
-    }
-
-    public static void viewAllChromebook(ArrayList<Chromebook> chromebookList) {
-        ResourceCentre.setHeader("CHROMEBOOK LIST");
-        String output = String.format("%-10s %-30s %-10s %-10s %-20s\n", "ASSET TAG", "DESCRIPTION",
-                "AVAILABLE", "DUE DATE", "OS");
-        output += retrieveAllChromebook(chromebookList);
-        System.out.println(output);
-    }
-
-    //================================= Option 2 Add an item (CRUD - Create) =================================
-    public static Camcorder inputCamcorder() {
-        String tag = Helper.readString("Enter asset tag > ");
-        String description = Helper.readString("Enter description > ");
-        int zoom = Helper.readInt("Enter optical zoom > ");
-
-        Camcorder cc = new Camcorder(tag, description, zoom);
-        return cc;
-
-    }
-
-    public static void addCamcorder(ArrayList<Camcorder> camcorderList, Camcorder cc) {
-        Camcorder item;
-        for (int i = 0; i < camcorderList.size(); i++) {
-            item = camcorderList.get(i);
-            if (item.getAssetTag().equalsIgnoreCase(cc.getAssetTag()))
-                return;
-        }
-        if ((cc.getAssetTag().isEmpty()) || (cc.getDescription().isEmpty())) {
-            return;
-        }
-
-        camcorderList.add(cc);
-    }
-    //update
-    public static Chromebook inputChromebook() {
-        String tag = Helper.readString("Enter asset tag > ");
-        String description = Helper.readString("Enter description > ");
-        String os = Helper.readString("Enter OS > ");
-
-        Chromebook cb = new Chromebook(tag, description, os);
-        return cb;
-
-    }
-
-    public static void addChromebook(ArrayList<Chromebook> chromebookList, Chromebook cb) {
-        Chromebook item;
-        for (int i = 0; i < chromebookList.size(); i++) {
-            item = chromebookList.get(i);
-            if (item.getAssetTag().equalsIgnoreCase(cb.getAssetTag()))
-                return;
-        }
-        if ((cb.getAssetTag().isEmpty()) || (cb.getDescription().isEmpty()) || (cb.getOs().isEmpty())) {
-            return;
-        }
-
-        chromebookList.add(cb);
-    }
-
-    //================================= Option 3 Loan an item (CRUD - Updated) =================================
-    public static boolean doLoanCamcorder(ArrayList<Camcorder> camcorderList, String tag, String dueDate) {
-
-        boolean isLoaned = false;
-
-        if (tag.isEmpty() || dueDate.isEmpty())
-            return false;
-
-        for (int i = 0; i < camcorderList.size(); i++) {
-            if (tag.equalsIgnoreCase(camcorderList.get(i).getAssetTag())
-                    && camcorderList.get(i).getIsAvailable() == true) {
-
-                camcorderList.get(i).setIsAvailable(false);
-                camcorderList.get(i).setDueDate(dueDate);
-
-                isLoaned = true;
-            }
-        }
-        return isLoaned;
-    }
-
-    public static void loanCamcorder(ArrayList<Camcorder> camcorderList) {
-        ResourceCentre.viewAllCamcorder(camcorderList);
-        String tag = Helper.readString("Enter asset tag > ");
-        String due = Helper.readString("Enter due date > ");
-        Boolean isLoaned = doLoanCamcorder(camcorderList, tag, due);
-        if (isLoaned == false) {
-            System.out.println("Invalid asset tag or camcorder is not available for loan");
-        } else {
-            System.out.println("Camcorder " + tag + " loaned out");
-        }
-    }
-
-    public static boolean doLoanChromebook(ArrayList<Chromebook> chromebookList, String tag, String dueDate) {
-        boolean isLoaned = false;
-
-        if (tag.isEmpty() || dueDate.isEmpty())
-            return false;
-
-        for (int i = 0; i < chromebookList.size(); i++) {
-            if (tag.equalsIgnoreCase(chromebookList.get(i).getAssetTag())
-                    && chromebookList.get(i).getIsAvailable() == true) {
-
-                chromebookList.get(i).setIsAvailable(false);
-                chromebookList.get(i).setDueDate(dueDate);
-
-                isLoaned = true;
-            }
-        }
-        return isLoaned;
-    }
-
-    public static void loanChromebook(ArrayList<Chromebook> chromebookList) {
-        ResourceCentre.viewAllChromebook(chromebookList);
-        String tag = Helper.readString("Enter asset tag > ");
-        String due = Helper.readString("Enter due date > ");
-        Boolean isLoaned = doLoanChromebook(chromebookList, tag, due);
-        if (isLoaned == false) {
-            System.out.println("Invalid asset tag or chromebook is not available for loan");
-        } else {
-            System.out.println("Chromebook " + tag + " loaned out");
-        }
-    }
-
-    //================================= Option 4 Return an item (CRUD - Update)=================================
-    public static boolean doReturnCamcorder(ArrayList<Camcorder> camcorderList, String tag) {
-        boolean isReturned = false;
-
-        if (tag.isEmpty())
-            return false;
-
-        for (int i = 0; i < camcorderList.size(); i++) {
-            if (tag.equalsIgnoreCase(camcorderList.get(i).getAssetTag())
-                    && camcorderList.get(i).getIsAvailable() == false) {
-                camcorderList.get(i).setIsAvailable(true);
-                camcorderList.get(i).setDueDate("");
-                isReturned = true;
-
-            }
-        }
-        return isReturned;
-
-    }
-
-    public static void returnCamcorder(ArrayList<Camcorder> camcorderList) {
-        ResourceCentre.viewAllCamcorder(camcorderList);
-        String tag = Helper.readString("Enter asset tag > ");
-        Boolean isReturned = doReturnCamcorder(camcorderList, tag);
-
-        if (isReturned == false) {
-            System.out.println("Invalid asset tag or camcorder is not on loan");
-        } else {
-            System.out.println("Camcorder " + tag + " returned");
-        }
-    }
-
-    public static boolean doReturnChromebook(ArrayList<Chromebook> chromebookList, String tag) {
-        boolean isReturned = false;
-
-        if (tag.isEmpty())
-            return false;
-
-        for (int i = 0; i < chromebookList.size(); i++) {
-            if (tag.equalsIgnoreCase(chromebookList.get(i).getAssetTag())
-                    && chromebookList.get(i).getIsAvailable() == false) {
-                chromebookList.get(i).setIsAvailable(true);
-                chromebookList.get(i).setDueDate("");
-                isReturned = true;
-            }
-        }
-        return isReturned;
-    }
-
-    public static void returnChromebook(ArrayList<Chromebook> chromebookList) {
-        ResourceCentre.viewAllChromebook(chromebookList);
-        String tag = Helper.readString("Enter asset tag > ");
-        Boolean isReturned = doReturnChromebook(chromebookList, tag);
-
-        if (isReturned == false) {
-            System.out.println("Invalid asset tag or chromebook is not on loan");
-        } else {
-            System.out.println("Chromebook " + tag + " returned");
-        }
-    }
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+public class ResourceCentreTest {
+	// prepare test data
+	private Camcorder cc1;
+	private Camcorder cc2;
+	private Camcorder cc3;
+	private Chromebook cb1;
+	private Chromebook cb2;
+	private Chromebook cb3;
+
+	private ArrayList<Camcorder> camcorderList;
+	private ArrayList<Chromebook> chromebookList;
+
+	public ResourceCentreTest() {
+		super();
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		// prepare test data
+		cc1 = new Camcorder("CC0011", "Nikon HDSLR", 40);
+		cc2 = new Camcorder("CC0012", "Sony DSC-RX100M7", 20);
+		cc3 = new Camcorder("CC0013", "Panasonic DSC-RX100M7", 30);
+		cb1 = new Chromebook("CB0011", "My Google Chromebook 1st", "Mac OS");
+		cb2 = new Chromebook("CB0012", "Samsung Chromebook 4+", "Win 10");
+		cb3 = new Chromebook("CB0013", "HUAWEI Magicbook 100+", "Mac 10");
+
+		camcorderList = new ArrayList<Camcorder>();
+		chromebookList = new ArrayList<Chromebook>();
+	}
+
+	@Test
+	public void testAddCamcorder() {
+		// Item list is not null and it is empty
+		assertNotNull("Test if there is a valid Camcorder arraylist to add to", camcorderList);
+		assertEquals("Test that the Camcorder arraylist is empty.", 0, camcorderList.size());
+
+		// Given an empty list, after adding 1 item, the size of the list is 1
+		ResourceCentre.addCamcorder(camcorderList, cc1);
+		assertEquals("Test that the Camcorder arraylist size is 1.", 1, camcorderList.size());
+
+		// Add another item
+		ResourceCentre.addCamcorder(camcorderList, cc2);
+		assertEquals("Test that the Camcorder arraylist size is now 2.", 2, camcorderList.size());
+		// The item just added is the same as the last item in the list
+		assertSame("Test that Camcorder is added to the end of the list.", cc2, camcorderList.get(1));
+
+		// Add an item that already exists in the list
+		ResourceCentre.addCamcorder(camcorderList, cc2);
+		assertEquals("Test that the Camcorder arraylist size is unchanged.", 2, camcorderList.size());
+
+		// Add an item that has missing details
+		Camcorder cc_missing = new Camcorder("CC0014", "", 60);
+		ResourceCentre.addCamcorder(camcorderList, cc_missing);
+		assertEquals("Test that the Camcorder arraylist size is unchanged.", 2, camcorderList.size());
+	}
+
+	@Test
+	public void testAddChromebook() {
+		assertNotNull("Test if there is a valid Chromebook arraylist to add to", chromebookList);
+		assertEquals("Test that the Chromebook arraylist is empty.", 0, chromebookList.size());
+
+		ResourceCentre.addChromebook(chromebookList, cb1);
+		assertEquals("Test that the Chromebook arraylist size is 1.", 1, chromebookList.size());
+
+		ResourceCentre.addChromebook(chromebookList, cb2);
+		assertEquals("Test that the Chromebook arraylist size is now 2.", 2, chromebookList.size());
+		assertSame("Test that Chromebook is added to the end of the list.", cb2, chromebookList.get(1));
+
+		ResourceCentre.addChromebook(chromebookList, cb2);
+		assertEquals("Test that the Chromebook arraylist size is unchanged.", 2, chromebookList.size());
+
+		Chromebook cb_missing = new Chromebook("CB0014", "", "Win 10");
+		ResourceCentre.addChromebook(chromebookList, cb_missing);
+		assertEquals("Test that the Chromebook arraylist size is unchanged.", 2, chromebookList.size());
+	}
+
+	@Test
+	public void testRetrieveAllCamcorder() {
+		assertNotNull("Test if there is a valid Camcorder arraylist to add to", camcorderList);
+		assertEquals("Test that the Camcorder arraylist is empty.", 0, camcorderList.size());
+
+		String allCamcorder = ResourceCentre.retrieveAllCamcorder(camcorderList);
+		String testOutput = "";
+		assertEquals("Test that nothing is displayed", testOutput, allCamcorder);
+
+		ResourceCentre.addCamcorder(camcorderList, cc1);
+		ResourceCentre.addCamcorder(camcorderList, cc2);
+
+		assertEquals("Test that the Camcorder arraylist size is 2.", 2, camcorderList.size());
+
+		allCamcorder = ResourceCentre.retrieveAllCamcorder(camcorderList);
+		testOutput = String.format("%-10s %-30s %-10s %-10s %-20d\n", "CC0011", "Nikon HDSLR", "Yes", "", 40);
+		testOutput += String.format("%-10s %-30s %-10s %-10s %-20d\n", "CC0012", "Sony DSC-RX100M7", "Yes", "", 20);
+
+		assertEquals("Test that the display is correct.", testOutput, allCamcorder);
+
+		cc3.setIsAvailable(false);
+		ResourceCentre.addCamcorder(camcorderList, cc3);
+
+		assertEquals("Test that Camcorder arraylist size is 3.", 3, camcorderList.size());
+		assertFalse("Test that the last item in the arraylist is not available", camcorderList.get(2).getIsAvailable());
+
+		allCamcorder = ResourceCentre.retrieveAllCamcorder(camcorderList);
+		testOutput = String.format("%-10s %-30s %-10s %-10s %-20d\n", "CC0011", "Nikon HDSLR", "Yes", "", 40);
+		testOutput += String.format("%-10s %-30s %-10s %-10s %-20d\n", "CC0012", "Sony DSC-RX100M7", "Yes", "", 20);
+
+		assertEquals("Test that the display is correct.", testOutput, allCamcorder);
+	}
+
+	@Test
+	public void testRetrieveAllChromebook() {
+		assertNotNull("Test if there is a valid Chromebook arraylist to add to", chromebookList);
+		assertEquals("Test that the Chromebook arraylist is empty.", 0, chromebookList.size());
+
+		String allChromebook = ResourceCentre.retrieveAllChromebook(chromebookList);
+		String testOutput = "";
+
+		assertEquals("Test that nothing is displayed", testOutput, allChromebook);
+
+		ResourceCentre.addChromebook(chromebookList, cb1);
+		ResourceCentre.addChromebook(chromebookList, cb2);
+
+		assertEquals("Test that the Chromebook arraylist size is 2.", 2, chromebookList.size());
+
+		allChromebook = ResourceCentre.retrieveAllChromebook(chromebookList);
+		testOutput = String.format("%-10s %-30s %-10s %-10s %-20s\n", "CB0011", "My Google Chromebook 1st", "Yes", "", "Mac OS");
+		testOutput += String.format("%-10s %-30s %-10s %-10s %-20s\n", "CB0012", "Samsung Chromebook 4+", "Yes", "", "Win 10");
+
+		assertEquals("Test that the display is correct.", testOutput, allChromebook);
+
+		cb3.setIsAvailable(false);
+		ResourceCentre.addChromebook(chromebookList, cb3);
+
+		assertEquals("Test that Chromebook arraylist size is 3.", 3, chromebookList.size());
+		assertFalse("Test that the last item in the arraylist is not available", chromebookList.get(2).getIsAvailable());
+
+		allChromebook = ResourceCentre.retrieveAllChromebook(chromebookList);
+		testOutput = String.format("%-10s %-30s %-10s %-10s %-20s\n", "CB0011", "My Google Chromebook 1st", "Yes", "", "Mac OS");
+		testOutput += String.format("%-10s %-30s %-10s %-10s %-20s\n", "CB0012", "Samsung Chromebook 4+", "Yes", "", "Win 10");
+
+		assertEquals("Test that the display is correct.", testOutput, allChromebook);
+	}
+
+	@Test
+	public void testDoLoanCamcorder() {
+		assertNotNull("Test if there is a valid Camcorder arraylist to loan from", camcorderList);
+		ResourceCentre.addCamcorder(camcorderList, cc1);
+
+		Boolean ok = ResourceCentre.doLoanCamcorder(camcorderList, "CC0011", "8-8-2020");
+		assertTrue("Test if an available item is okay to loan?", ok);
+		assertFalse(camcorderList.get(0).getIsAvailable());
+		assertEquals("8-8-2020", camcorderList.get(0).getDueDate());
+
+		cc2.setIsAvailable(false);
+		ResourceCentre.addCamcorder(camcorderList, cc2);
+		assertFalse("Test that there is an item not available", camcorderList.get(1).getIsAvailable());
+
+		ok = ResourceCentre.doLoanCamcorder(camcorderList, "CC0012", "8-8-2020");
+		assertFalse("Test that the loan fails.", ok);
+
+		ok = ResourceCentre.doLoanCamcorder(camcorderList, "CC0016", "8-8-2020");
+		assertFalse("Test that the loan fails.", ok);
+
+		ResourceCentre.addCamcorder(camcorderList, cc3);
+		assertTrue("Test that there is an item available", camcorderList.get(2).getIsAvailable());
+
+		ok = ResourceCentre.doLoanCamcorder(camcorderList, "CC0013", "");
+		assertFalse("Test that the loan fails.", ok);
+	}
+
+	@Test
+	public void testDoLoanChromebook() {
+		assertNotNull("Test if there is a valid Chromebook arraylist to loan from", chromebookList);
+		ResourceCentre.addChromebook(chromebookList, cb1);
+
+		Boolean ok = ResourceCentre.doLoanChromebook(chromebookList, "CB0011", "8-8-2020");
+		assertTrue("Test if an available item is okay to loan?", ok);
+		assertFalse(chromebookList.get(0).getIsAvailable());
+		assertEquals("8-8-2020", chromebookList.get(0).getDueDate());
+
+		cb2.setIsAvailable(false);
+		ResourceCentre.addChromebook(chromebookList, cb2);
+		assertFalse("Test that there is an item not available", chromebookList.get(1).getIsAvailable());
+
+		ok = ResourceCentre.doLoanChromebook(chromebookList, "CB0012", "8-8-2020");
+		assertFalse("Test that the loan fails.", ok);
+
+		ok = ResourceCentre.doLoanChromebook(chromebookList, "CB0016", "8-8-2020");
+		assertFalse("Test that the loan fails.", ok);
+
+		ResourceCentre.addChromebook(chromebookList, cb3);
+		assertTrue("Test that there is an item available", chromebookList.get(2).getIsAvailable());
+
+		ok = ResourceCentre.doLoanChromebook(chromebookList, "CB0013", "");
+		assertFalse("Test that the loan fails.", ok);
+	}
+
+	@Test
+	public void testDoReturnCamcorder() {
+		assertNotNull("Test if there is a valid Camcorder arraylist to add to", camcorderList);
+		ResourceCentre.addCamcorder(camcorderList, cc1);
+		Boolean ok = ResourceCentre.doLoanCamcorder(camcorderList, "CC0011", "8-8-2020");
+		assertTrue("Test if CC0011 is successfully loaned out.", ok);
+		Boolean isReturned = ResourceCentre.doReturnCamcorder(camcorderList, "CC0011");
+		assertTrue("Test if the return of CC0011 is successful.", isReturned);
+		assertTrue("Test that CC0011 is now available.", camcorderList.get(0).getIsAvailable());
+
+		isReturned = ResourceCentre.doReturnCamcorder(camcorderList, "CC0011");
+		assertFalse("Test that the return fails.", isReturned);
+
+		isReturned = ResourceCentre.doReturnCamcorder(camcorderList, "CC0013");
+		assertFalse("Test that the return fails.", isReturned);
+	}
+
+	@Test
+	public void testDoReturnChromebook() {
+		assertNotNull("Test if there is a valid Chromebook arraylist to add to", chromebookList);
+		ResourceCentre.addChromebook(chromebookList, cb1);
+		Boolean ok = ResourceCentre.doLoanChromebook(chromebookList, "CB0011", "8-8-2020");
+		assertTrue("Test if CB0011 is successfully loaned out.", ok);
+		Boolean isReturned = ResourceCentre.doReturnChromebook(chromebookList, "CB0011");
+		assertTrue("Test if the return of CB0011 is successful.", isReturned);
+		assertTrue("Test that CB0011 is now available.", chromebookList.get(0).getIsAvailable());
+
+		isReturned = ResourceCentre.doReturnChromebook(chromebookList, "CB0011");
+		assertFalse("Test that the return fails.", isReturned);
+
+		isReturned = ResourceCentre.doReturnChromebook(chromebookList, "CB0013");
+		assertFalse("Test that the return fails.", isReturned);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		cc1 = null;
+		cc2 = null;
+		cc3 = null;
+		cb1 = null;
+		cb2 = null;
+		cb3 = null;
+		camcorderList = null;
+		chromebookList = null;
+	}
 }
