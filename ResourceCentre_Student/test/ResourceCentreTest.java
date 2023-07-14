@@ -132,8 +132,39 @@ public class ResourceCentreTest {
 	@Test
 	public void testRetrieveAllChromebook() {
 		//fail("Not yet implemented");
-		// write your code here
+		// write your code hereassertNotNull("Test if there is valid Chromebook arraylist to add to", chromebookList);
+		assertEquals("Test that the Chromebook arraylist is empty.", 0, chromebookList.size());
+		// Attempt to retrieve the Chromebook
+		String allChromebook= ResourceCentre.retrieveAllChromebook(chromebookList);
+		String testOutput = "";
+		// Test if the output is empty
+		assertEquals("Test that nothing is displayed", testOutput, allChromebook);
+
+		//Test Case 2
+		ResourceCentre.addChromebook(chromebookList, cb1);
+		ResourceCentre.addChromebook(chromebookList, cb2);
+		// Test that the list is not empty
+		assertEquals("Test that Chromebook arraylist size is 2.", 2, chromebookList.size());
+		// Attempt to retrieve the Chromebook
+		allChromebook= ResourceCentre.retrieveAllChromebook(chromebookList);
+		testOutput = String.format("%-10s %-30s %-10s %-10s %-20d\n","CC0011", "Nikon HDSLR", "Yes", "", 40);
+		testOutput += String.format("%-10s %-30s %-10s %-10s %-20d\n","CC0012", "Sony DSC-RX100M7", "Yes", "", 20);
+		// Test that the details are displayed correctly
+		assertEquals("Test that the display is correct.", testOutput, allChromebook);
+
+		//Test Case 3
+		cc3.setIsAvailable(false);
+		ResourceCentre.addChromebook(chromebookList, cb3);
+		assertEquals("Test that Chromebook arraylist size is 2.", 3, chromebookList.size());
+		assertFalse("Test that the last item in the arraylist is not available", chromebookList.get(2).getIsAvailable());
+		// Attempt to retrieve the Camcoders 
+		allChromebook= ResourceCentre.retrieveAllChromebook(chromebookList);
+		testOutput = String.format("%-10s %-30s %-10s %-10s %-20d\n","CC0011", "Nikon HDSLR", "Yes", "", 40);
+		testOutput += String.format("%-10s %-30s %-10s %-10s %-20d\n","CC0012", "Sony DSC-RX100M7", "Yes", "", 20);
+		// Test that the details are displayed correctly
+		assertEquals("Test that the display is correct.", testOutput, allChromebook);
 	}
+
 
 	@Test
 	public void testDoLoanCamcorder() {
