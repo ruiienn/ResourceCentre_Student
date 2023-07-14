@@ -129,15 +129,19 @@ public class ResourceCentre {
         String output = "";
 
         for (int i = 0; i < camcorderList.size(); i++) {
-            if (camcorderList.get(i).getIsAvailable()) {
-                output += String.format("%-10s %-30s %-10s %-10s %-20d\n", camcorderList.get(i).getAssetTag(),
-                        camcorderList.get(i).getDescription(),
-                        ResourceCentre.showAvailability(camcorderList.get(i).getIsAvailable()),
-                        camcorderList.get(i).getDueDate(), camcorderList.get(i).getOpticalZoom());
+        	if (true) {
+        	    output += String.format("%-10s %-30s %-10s %-10s %-20d\n", camcorderList.get(i).getAssetTag(),
+        	            camcorderList.get(i).getDescription(),
+        	            ResourceCentre.showAvailability(camcorderList.get(i).getIsAvailable()),
+        	            camcorderList.get(i).getDueDate(), camcorderList.get(i).getOpticalZoom());
+        	
+
             }
         }
         return output;
+        
     }
+    
 
     public static void viewAllCamcorder(ArrayList<Camcorder> camcorderList) {
         ResourceCentre.setHeader("CAMCORDER LIST");
@@ -151,12 +155,13 @@ public class ResourceCentre {
         String output = "";
 
         for (int i = 0; i < chromebookList.size(); i++) {
-            if (chromebookList.get(i).getIsAvailable()) {
-                output += String.format("%-10s %-30s %-10s %-10s %-20s\n", chromebookList.get(i).getAssetTag(),
-                        chromebookList.get(i).getDescription(),
-                        ResourceCentre.showAvailability(chromebookList.get(i).getIsAvailable()),
-                        chromebookList.get(i).getDueDate(), chromebookList.get(i).getOs());
-            }
+        	if (true) {
+        	    output += String.format("%-10s %-30s %-10s %-10s %-20s\n", chromebookList.get(i).getAssetTag(),
+        	            chromebookList.get(i).getDescription(),
+        	            ResourceCentre.showAvailability(chromebookList.get(i).getIsAvailable()),
+        	            chromebookList.get(i).getDueDate(), chromebookList.get(i).getOs());
+        	}
+
         }
         return output;
     }
